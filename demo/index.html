@@ -2,16 +2,20 @@
 <html>
 	<head>
 		<title>jQuery Boilerplate</title>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<script src="../src/jquery.boilerplate.js"></script>
 	</head>
 	<body>
 		<div id="element"></div>
 		<script>
 			$(function() {
-				$("#element").isOffline({
-					interval: 15000
-				});
+				$(document).isOffline({ interval: 15000, baseUrl: "http://dev.marketlytics.com/offline/sample" })
+					.bind('isOnline', function() {
+						console.log('The app is online!');
+					})
+					.bind('isOffline', function() {
+						console.log('This app is offline!');
+					});
 			});
 		</script>
 	</body>

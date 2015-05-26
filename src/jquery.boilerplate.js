@@ -13,17 +13,24 @@
 		// as this (slightly) quickens the resolution process and can be more efficiently
 		// minified (especially when both are regularly referenced in your plugin).
 
+		// Element functions and data can be accessed using the data function
+		// $(document).data('plugin_isOffline').isOffline => returns the current state
+
 		// Create the defaults once
 		var pluginName = "isOffline";
 		var defaults = {
 				interval: 30000,
 				timeout: 10000,
-				baseUrl: "/favicon.ico"
+				baseUrl: "/favicon.ico",
+				triggerEventOffline: "isOffline",
+				triggerEventOnline: "isOnline"
 		};
 
 		// The actual plugin constructor
 		function Plugin ( element, options ) {
 				this.element = element;
+				this.isOffline = true;
+
 				// jQuery has an extend method which merges the contents of two or
 				// more objects, storing the result in the first object. The first object
 				// is generally empty as we don't want to alter the default options for
@@ -31,23 +38,49 @@
 				this.settings = $.extend( {}, defaults, options );
 				this._defaults = defaults;
 				this._name = pluginName;
+
+				this.check = function() {
+					this.checkConnection();
+				}
+
 				this.init();
 		}
 
 		// Avoid Plugin.prototype conflicts
 		$.extend(Plugin.prototype, {
-				init: function () {
-						// Place initialization logic here
-						// You already have access to the DOM element and
-						// the options via the instance, e.g. this.element
-						// and this.settings
-						// you can add more functions like the one below and
-						// call them like so: this.yourOtherFunction(this.element, this.settings).
-						console.log("xD");
+
+				wentOnline: function() {
+					if(this.isOffline) {
+						$(this.element).trigger(this.settings.triggerEventOnline);
+					}
+					this.isOffline = false;
 				},
 
-				yourOtherFunction: function () {
-						// some logic
+				wentOffline: function() {
+					if(!this.isOffline) {
+						$(this.element).trigger(this.settings.triggerEventOffline);
+					}
+					this.isOffline = true;
+				},
+
+				checkConnection: function() {
+					var _this = this;
+					$.ajax({
+						timeout: this.settings.timeout,
+						cache: false,
+						context: this,
+						url: this.settings.baseUrl,
+						success:  this.wentOnline,
+						error: this.wentOffline
+					});
+
+					setTimeout(function() {
+						_this.checkConnection(); // needs to be done to maintain the context
+					}, this.settings.interval);
+				},
+
+				init: function() {
+					this.checkConnection();
 				}
 		});
 
@@ -61,4 +94,4 @@
 				});
 		};
 
-})( jQuery, window, document );
+})( $, window, document );
