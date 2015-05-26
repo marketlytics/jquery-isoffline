@@ -74,13 +74,15 @@
 						error: this.wentOffline
 					});
 
-					setTimeout(function() {
-						_this.checkConnection(); // needs to be done to maintain the context
-					}, this.settings.interval);
+					if(this.settings.interval > 0) { // only use interval if interval is a valid number
+						setTimeout(function() {
+							_this.checkConnection(); // needs to be done to maintain the context
+						}, this.settings.interval);
+					}
 				},
 
 				init: function() {
-					this.checkConnection();
+						this.checkConnection();
 				}
 		});
 
