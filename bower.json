@@ -1,0 +1,17 @@
+{
+	"name": "jquery-isoffline",
+	"version": "0.0.1",
+	"authors": [
+		"Mashhood Rastgar <mashhoodr@gmail.com>"
+	],
+	"description": "A jQuery plugin for checking if your web application is offline.",
+	"main": "src/jquery.boilerplate.js",
+	"keywords": [
+		"jquery",
+		"plugin",
+		"offline",
+		"jquery-plugin",
+		"jquery-boilerplate"
+	],
+	"license": "MIT"
+}
