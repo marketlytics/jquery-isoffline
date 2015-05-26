@@ -6,17 +6,34 @@
 		<script src="../src/jquery.boilerplate.js"></script>
 	</head>
 	<body>
-		<div id="element"></div>
+		<h2 id="status">
+			Application is initializing...
+		</h2>
+
+		<a href="#" id="trigger">Check now</a>
+
 		<script>
 			$(function() {
 				$(document).isOffline({ interval: 15000, baseUrl: "http://dev.marketlytics.com/offline/sample" })
 					.bind('isOnline', function() {
 						console.log('The app is online!');
+						$("#status").html("Application is online.");
 					})
-					.bind('isOffline', function() {
-						console.log('This app is offline!');
+					.bind("isOffline", function() {
+						console.log("This app is offline!");
+						$("#status").html("Application is offline.");
 					});
+
+				$("#trigger").click(function() {
+					var plugin = $(document).data("plugin_isOffline");
+					if(typeof plugin !== "undefined") {
+						console.log("Application is currently: ", plugin.isOffline);
+						console.log("Trigger checking now.");
+						plugin.check();
+					}
+				});
 			});
 		</script>
 	</body>
+
 </html>
