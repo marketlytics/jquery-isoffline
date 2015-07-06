@@ -50,17 +50,19 @@
 		$.extend(Plugin.prototype, {
 
 				wentOnline: function() {
-					if(this.isOffline) {
+					var temp = this.isOffline;
+					this.isOffline = false;
+					if(temp) {
 						$(this.element).trigger(this.settings.triggerEventOnline);
 					}
-					this.isOffline = false;
 				},
 
 				wentOffline: function() {
-					if(!this.isOffline) {
+					var temp = this.isOffline;
+					this.isOffline = true;
+					if(!temp) {
 						$(this.element).trigger(this.settings.triggerEventOffline);
 					}
-					this.isOffline = true;
 				},
 
 				checkConnection: function() {
